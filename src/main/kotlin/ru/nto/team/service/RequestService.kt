@@ -56,8 +56,7 @@ class RequestService(private val staffRepository: StaffRepository,
                     request.status
                 )
             }
-            .sortedBy { requestListDto ->  requestListDto.validFrom }
-            .sortedBy { requestListDto -> requestListDto.id }
+            .sortedWith(compareBy({ it.validFrom },{ it.id }))
     }
     fun details(code: String, id: Long): RequestDetailsDto {
         val staff = getStaff(code)
