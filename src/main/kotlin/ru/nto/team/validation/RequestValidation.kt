@@ -83,7 +83,7 @@ object RequestValidation{
         val periodReasons: MutableMap<String, String> = mutableMapOf()
         var parsedFrom: LocalDateTime? = null
         var parsedTo: LocalDateTime?
-        if(validFrom != null && !Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}'T'[0-9]{2}:[0-9]{2}:[0-9]{2}$").matches(validFrom)) {
+        if(validFrom != null && !Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$").matches(validFrom)) {
             try {
                 parsedFrom = LocalDateTime.parse(validFrom)
                 if (parsedFrom.isBefore(now)) {
