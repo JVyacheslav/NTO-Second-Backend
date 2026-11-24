@@ -116,7 +116,7 @@ class RequestService(private val staffRepository: StaffRepository,
             throw InvalidStatusDecisionExceptionDomain()
         }
         request.status = RequestStatus.CANCELLED
-        request.updatedAt = LocalDateTime.now(clock)
+        request.updatedAt = RequestValidation.formatDate(LocalDateTime.now(clock))
         request = passRequestRepository.save(request)
         return RequestDetailsDto(
             request.id, request.fullName,
@@ -129,15 +129,16 @@ class RequestService(private val staffRepository: StaffRepository,
     @Transactional
     fun decide(id: Long, body: DecisionBody): RequestDetailsDto {
         var passRequest: PassRequest = passRequestRepository.findById(id).orElse(null) ?: throw RequestNotFoundExceptionDomain()
-        if(passRequest.status != RequestStatus.PENDING){
-            throw InvalidStatusDecisionExceptionDomain()
-        }
         val normalizedBody: DecisionBody = RequestValidation.normalizeDecision(body)
         val now = LocalDateTime.now(clock)
         RequestValidation.checkDecision(normalizedBody)
+	if(passRequest.status != RequestStatus.PENDING){
+            throw InvalidStatusDecisionExceptionDomain()
+        }
         val parsedStatus: RequestStatus = RequestStatus.valueOf(normalizedBody.status!!)
         if (parsedStatus == RequestStatus.APPROVED){
             passRequest.status = parsedStatus
+	    passRequest.comment = null
             passRequest.updatedAt = RequestValidation.formatDate(now)
             passRequest = passRequestRepository.save(passRequest)
         } else {

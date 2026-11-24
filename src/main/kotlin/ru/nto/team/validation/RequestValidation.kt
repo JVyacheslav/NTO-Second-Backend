@@ -83,7 +83,7 @@ object RequestValidation{
         val periodReasons: MutableMap<String, String> = mutableMapOf()
         var parsedFrom: LocalDateTime? = null
         var parsedTo: LocalDateTime?
-        if(validFrom != null && !Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$").matches(validFrom)) {
+        if(validFrom != null && Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$").matches(validFrom)) {
             try {
                 parsedFrom = LocalDateTime.parse(validFrom)
                 if (parsedFrom.isBefore(now)) {
@@ -95,7 +95,7 @@ object RequestValidation{
         } else{
             periodReasons.put("validFrom", "ValidFrom is incorrect format")
         }
-        if(validTo != null && !Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}'T'[0-9]{2}:[0-9]{2}:[0-9]{2}$").matches(validTo)) {
+        if(validTo != null && Regex("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$").matches(validTo)) {
             try {
                 parsedTo = LocalDateTime.parse(validTo)
                 if (parsedFrom != null && !parsedTo.isAfter(parsedFrom)) {
